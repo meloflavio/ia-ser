@@ -2,10 +2,10 @@
 import ffmpeg from 'fluent-ffmpeg';
 import ffmpegStatic from 'ffmpeg-static';
 
-const removeSilence = async () => new Promise((resolve, reject) => {
+const removeSilence = async (tempPath) => new Promise((resolve, reject) => {
   console.log("Removendo o silêncio do áudio...")
-  const filePath = './../tmp/audio.mp4';
-  const outputPath = filePath.replace(".mp4", ".wav")
+  const filePath = tempPath;
+  const outputPath = filePath+ ".wav"
 
   ffmpeg.setFfmpegPath(ffmpegStatic || "")
   ffmpeg(filePath)

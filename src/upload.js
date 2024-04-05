@@ -8,12 +8,7 @@ export const upload = multer({ dest: './../tmp' });
 
 // Função para processar o arquivo
 export async function processFile(tempPath) {
-    const targetPath = './../tmp/audio.mp4';
-    const outputPath = targetPath.replace(".mp4", ".wav")
-    // Renomeia o arquivo para 'audio.wav'
-    fs.rename(tempPath, targetPath).catch((error) => {
-        if (error) return false;
-    })
-    await removeSilence();
-    return outputPath;
+    
+    await removeSilence(tempPath);
+    return tempPath;
 }
