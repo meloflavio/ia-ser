@@ -1,6 +1,5 @@
-import ytdl from 'ytdl-core'
+import ytdl  from 'ytdl-core'
 import fs from 'fs'
-import { error } from 'console';
 
 export const download = (videoId) => new Promise((resolve, reject) => {
   const COOKIE ='x-youtube-identity-token=QUFFLUhqbW9ZZXNrMy1BUDFaNmgxZUQtNGM1V3IzLWVTUXw'
@@ -36,5 +35,5 @@ export const download = (videoId) => new Promise((resolve, reject) => {
   }).on("error", (error) => {
     console.log("Não foi possível fazer o download do vídeo. Detalhes do erro:", error);
     reject(error)
-  }).pipe(fs.createWriteStream("./tmp/audio.mp4"))
+  }).pipe(fs.createWriteStream("./../tmp/audio.mp4"))
 })

@@ -1,14 +1,19 @@
-import cors from 'cors'
-import express from 'express'
-import fs from 'fs'
 
-import { download } from './download.js'
-import { transcribe } from './transcribe.js'
-import { summarize } from './summarize.js'
-import { convert } from './convert.js'
-import { upload, processFile } from './upload.js'; 
+import { download } from './src/download.js'
+import { transcribe } from './src/transcribe.js'
+import { summarize } from './src/summarize.js'
+import { convert } from './src/convert.js'
+import { upload, processFile } from './src/upload.js'; 
+import express from 'express'; 
+import cors from 'cors'; 
+import fs from 'fs'; 
+import dotenv from 'dotenv'; 
 
-const app = express()
+
+var port = process.env.PORT || 8080;
+
+dotenv.config();
+const app = express();
 
 app.use(express.json())
 app.use(cors())
@@ -18,7 +23,7 @@ app.get('/', (req, res) => res.send('Home Page Route'));
 app.get('/summary/:id', async (req, res) => {
   try {
     await download(req.params.id)
-    const audioConverted = await convert()
+    const audioConverted = await convert();
     const result = await transcribe(audioConverted)
 
     return res.json({ result })
@@ -40,7 +45,10 @@ app.post('/summary', async (req, res) => {
 
 app.post('/upload', upload.single('file'), async (req, res) => {
   try {
-    const processedFilePath = await processFile(req, res)
+    const processedFilePath = req.file && req.file.path ? await processFile(req.file.path) : '';
+    if(!processedFilePath){
+      return res.status(500).json({ error: "Erro ao processar o arquivo" });
+    }
     // Configura os cabeçalhos da resposta para indicar um download de arquivo
     res.setHeader('Content-Disposition', 'attachment; filename=processedAudio.wav');
     res.setHeader('Content-Type', 'audio/wav');
@@ -67,4 +75,4 @@ app.post('/upload', upload.single('file'), async (req, res) => {
 });
 
 
-app.listen(3333, () => console.log('Server is running on port 3333'))
+app.listen(port, () => console.log('Server is running on port '+port))

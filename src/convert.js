@@ -1,15 +1,14 @@
 import fs from 'fs'
-import wav from "node-wav"
-import ffmpeg from "fluent-ffmpeg"
-import ffmpegStatic from "ffmpeg-static"
-
-const filePath = "./tmp/audio.mp4"
+import wav from 'node-wav'
+import ffmpeg from 'fluent-ffmpeg'
+import ffmpegStatic from 'ffmpeg-static'
+const filePath = "./../tmp/audio.mp4"
 const outputPath = filePath.replace(".mp4", ".wav")
 
 export const convert = () => new Promise((resolve, reject) => {
   console.log("convertendo o vídeo...")
 
-  ffmpeg.setFfmpegPath(ffmpegStatic)
+  ffmpeg.setFfmpegPath(ffmpegStatic || "")
   ffmpeg().input(filePath)
   .audioFrequency(16000)
   .audioChannels(1)
@@ -23,7 +22,7 @@ export const convert = () => new Promise((resolve, reject) => {
 
     console.log("Vídeo convertido com sucesso!");
 
-    resolve(floatArray)
+    resolve(floatArray) 
     fs.unlinkSync(outputPath)
   }).on("error", (error) => {
     console.log(`Erro ao converter o vídeo ${error}`);
